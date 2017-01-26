@@ -1,2 +1,1 @@
-# slingshot_server
-Slingshot Server
+# slingshot
