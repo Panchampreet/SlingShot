@@ -1,0 +1,148 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Slingshot | Welcome</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link href="/static/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
+    <script src="/static/js/fileinput.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="http://dhbhdrzi4tiry.cloudfront.net/cdn/sites/foundation.min.css">
+    <link href='http://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css' rel='stylesheet' type='text/css'>
+    <link rel="shortcut icon" type="image/png" href="../../static/favicon.ico" />
+</head>
+
+<body>
+    <div class="off-canvas-wrapper">
+        <div class="off-canvas-wrapper-inner" data-off-canvas-wrapper>
+            <div class="off-canvas position-left reveal-for-large" id="my-info" data-off-canvas data-position="left">
+                <div class="row column">
+                    <br>
+                    <img class="thumbnail" src="../../images/calm-in-the-storm.jpg">
+                    <h5>Test User</h5>
+                    <p>User Profile Page for Slingshot App. Let's go exploring.</p>
+                    <hr>
+                    <p>Aishwarya, Husam, PanchamPreet, Shubham</p>
+                </div>
+            </div>
+            <div class="off-canvas-content" data-off-canvas-content>
+                <div class="title-bar hide-for-large">
+                    <div class="title-bar-left">
+                        <button class="menu-icon" type="button" data-open="my-info"></button>
+                        <span class="title-bar-title">Test User</span>
+                    </div>
+                </div>
+                <div class="callout primary">
+                    <div class="row column">
+                        <h1>Gallery</h1>
+                        <!--  <a href="/api/index"><h1>Home</h1></a> -->
+                        <form type="get" action="/api/search" style="margin: 0">
+                            <input id="search_box" type="text" name="searchtag" placeholder="Enter group name...">
+                            <button id="search_submit" type="submit">Submit</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="row small-up-2 medium-up-3 large-up-4">
+                    {% for img in images %}
+                    <div class="column">
+                        <a href={{ img }}>
+                            <img src="{{ img }}">
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="medium-6 columns">
+            <button class="button" value="like">Recluster</button>
+        </div>
+        <div class="medium-6 columns">
+            <form action="#" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <tr>
+                    <th>
+                        <label for="id_image">Image:</label>
+                    </th>
+                    <td>
+                        <input id="id_image" name="image" type="file" class="file" data-preview-file-type="text" multiple/>
+                    </td>
+                    <td>
+                        <input id="uuid" name="uuid" type="hidden" value='test' />
+                    </td>
+                </tr>
+            </form>
+            {% for img in images_upload %} {{forloop.counter}}.
+            <a href="{{ img.pic.url }}">{{ img.pic.name }}</a> ({{img.upload_date}})
+            <hr /> {% endfor %}
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    <div class="medium-6 columns">
+        {% if groups %}
+        <h3>Update Group Names</h3> {% endif %} {% for grp in groups %}
+        <form action="../update/">
+            <br>
+            <a href='../search/?searchtag={{grp}}'>{{grp}}</a>
+            <input type="text" name='{{grp}}' placeholder="update group name here">
+            <input type="submit" value="Submit">
+            <br>
+        </form>
+        {% endfor %}
+    </div>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="http://dhbhdrzi4tiry.cloudfront.net/cdn/sites/foundation.js"></script>
+    <script>
+    $(document).foundation();
+    </script>
+    <script type="text/javascript" src="https://intercom.zurb.com/scripts/zcom.js"></script>
+    <script>
+    // Only run what comes next *after* the page has loaded
+    addEventListener("DOMContentLoaded", function() {
+        // Grab all of the elements with a class of command
+        // (which all of the buttons we just created have)
+        var commandButtons = document.getElementsByClassName("button");
+        for (var i = 0, l = commandButtons.length; i < l; i++) {
+            var button = commandButtons[i];
+            // For each button, listen for the "click" event
+            button.addEventListener("click", function(e) {
+                // When a click happens, stop the button
+                // from submitting our form (if we have one)
+                e.preventDefault();
+
+                var clickedButton = e.target;
+                var command = clickedButton.value;
+
+                // Now we need to send the data to our server
+                // without reloading the page - this is the domain of
+                // AJAX (Asynchronous JavaScript And XML)
+                // We will create a new request object
+                // and set up a handler for the response
+                var request = new XMLHttpRequest();
+                request.onload = function() {
+                    // We could do more interesting things with the response
+                    // or, we could ignore it entirely
+                    // alert(request.responseText);
+                    if (command == "like") {
+                        console.log(request.responseURL);
+                    }
+                };
+                // We point the request at the appropriate command
+
+                request.open("GET", "/api/process/?uuid=test", true);
+                // and then we send it off
+                request.send();
+            });
+        }
+    }, true);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,9 @@
+{
+	"elasticsearch" : {
+		"host" : "http://127.0.0.1:9200",
+		"port" : 443,
+		"index" : "image_data",
+		"doc" : "metadata",
+		"index_group": "groups"
+	}
+}
